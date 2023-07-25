@@ -54,8 +54,7 @@ const Home = () => {
     const updateAPY = () => {  
         const p = Promise.resolve(checkAPY());
         p.then(value => {
-            console.log(value)
-            let num =  Number(value) * 365
+            let num =  Number(value) * 365 
             setapy({data: num}); 
         })  
     }; 
