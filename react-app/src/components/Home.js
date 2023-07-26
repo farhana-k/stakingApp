@@ -44,20 +44,20 @@ const Home = () => {
 
     //  check estimated APY
     const checkAPY = async () => {
-        let amount = document.getElementById("amt").value;
-        let periodInSeconds = 86400;
-        const r = await myContract.methods.calculateAPY(amount, periodInSeconds).call()
-        return r;
-    }
+        // total blocks in a year assuming average block period of 12 seconds
+        let totalBlocks = 86400 * 365 / 12; 
+        
+        // diviide by 10 to get reward block count for every 10 blocks
+        let rewardblocks =  totalBlocks / 10;
+        let ratePerPeriod = 0.02; 
 
-    // update APY
-    const updateAPY = () => {  
-        const p = Promise.resolve(checkAPY());
-        p.then(value => {
-            let num =  Number(value) * 365 
-            setapy({data: num}); 
-        })  
-    }; 
+        // calculate apy
+        let apy = ((1 + ratePerPeriod / rewardblocks) ** (rewardblocks)) - 1;
+        apy = apy * 100; // Convert to percentage)
+        
+        setapy({data: apy}); 
+
+    }
 
     //  check current block number 
     const checkBlockNumber = async () => {
@@ -122,10 +122,9 @@ const Home = () => {
 
             <div className="stake-preview">
                 <h1 className="stake-details">Calculate estimated APY</h1>
-                <input className="input" type="number" id="amt" placeholder="Amount "/>
-                <br /> <br />
+                <br /> 
                 { apy.data && <Balance data = {apy.data} /> }
-                <Button className="card" onClick={() => updateAPY()} >Check  </Button>
+                <Button className="card" onClick={() => checkAPY()} >Check  </Button>
             </div>
 
             <div className="stake-preview">

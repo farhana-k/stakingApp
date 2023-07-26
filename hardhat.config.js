@@ -26,7 +26,7 @@ module.exports = {
 //       chainId: 1337, // Chain ID of Ganache (default is 1337)
 //       gasPrice: 20000000000, // Gas price for transactions (optional)
 //       accounts: {
-//         mnemonic: "keen accident inform thumb source lens candy weather dilemma right mystery diary", // Mnemonic of your Ganache accounts
+//         mnemonic: "adjust dog entry prepare castle weapon razor noodle slow blade mango know", // Mnemonic of your Ganache accounts
 //       },
 //     },
 //   },

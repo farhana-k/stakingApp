@@ -15,10 +15,8 @@ contract StakingContract is StakingToken {
 
     uint256 public compoundInterestRate = 2; // 2% interest rate per 10 blocks
     uint256 public blocksPerReward = 10; // Generate rewards every 10 blocks
-    uint256 public firstBlock; // timestamp of first block, to calculate average block time
 
     constructor() StakingToken() {
-        firstBlock = block.timestamp; 
     }
 
     // Function to stake tokens
@@ -93,41 +91,20 @@ contract StakingContract is StakingToken {
 
     // function to calculate rewards 
     function calculateRewards(address addr) public view returns (uint256) {
-            if (stakers[addr].stakedBalance == 0) {
-                return 0;
-            }
+        if (stakers[addr].stakedBalance == 0) {
+            return 0;
+        }
 
-            uint256 blocksSinceLastStake = block.number - stakers[addr].lastBlockStaked;
-            uint256 rewardBlocks = blocksSinceLastStake / blocksPerReward;
+        uint256 blocksSinceLastStake = block.number - stakers[addr].lastBlockStaked;
+        uint256 rewardBlocks = blocksSinceLastStake / blocksPerReward;
 
-            // Calculate rewards with compound interest for every 10 blocks
-            uint256 rewards = stakers[addr].stakedBalance;
-            for (uint256 i = 0; i < rewardBlocks; i++) {
-                rewards += ( (rewards * compoundInterestRate) / 100 );
-            }
+        // Calculate rewards with compound interest for every 10 blocks
+        uint256 rewards = stakers[addr].stakedBalance;
+        for (uint256 i = 0; i < rewardBlocks; i++) {
+            rewards += ( (rewards * compoundInterestRate) / 100 );
+        }
 
-            return rewards - stakers[addr].stakedBalance;
-    }
-
-    // functio to calculate estimated APY 
-    function calculateAPY(uint256 amount, uint256 period) public view returns(uint256) {
-
-            // time elapsed after first block 
-            uint256 timeperiod = block.timestamp - firstBlock;
-
-            // average block time 
-            uint256 averageBlockPeriod = timeperiod / block.number;
-
-            // no. of blocks that will be added based on average block time 
-            uint256 Blocks =  period / averageBlockPeriod;
-
-            // Calculate rewards with compound interest for every 10 blocks
-            uint256 rewards = amount;
-            for (uint256 i = 0; i < Blocks / 10 ; i++) {
-                rewards += ( (rewards * compoundInterestRate) / 100) ;
-            }
-
-            return (rewards - amount );   
+        return rewards - stakers[addr].stakedBalance;
     }
 
     // function to check current block number
